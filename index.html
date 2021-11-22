@@ -87,7 +87,22 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "ed3541efa2d549478401d9eb816ebe3b"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+
+  <script>
+    class EmptyOperandError extends Error{
+      constructor(message){
+        super(message)
+        this.name = "EmptyOperandError"
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +110,98 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try{
+        console.log('Begin calculate!')
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }catch(err){
+        output.innerHTML = 'Warning: Operands error!'
+        if(!firstNum || !secondNum){
+          throw new EmptyOperandError('Operands should not be empty!')
+        }
+      }finally{
+        console.log(`Calculate Succeed!`)
+        console.log(`Result: ${output.innerHTML}`)
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    TrackJS.track('TrackJS is running!');
+
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Log Clicked!');
+    });
+
+    errorBtns[1].addEventListener('click', () => {
+      console.error('An Error!');
+    });
+
+    errorBtns[2].addEventListener('click', () => {
+      console.count('A count!');
+    });
+
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('Warning!');
+    });
+
+    errorBtns[4].addEventListener('click', () => {
+      const x = 1
+      const y = 1
+      const z = 3
+      const message = 'Wrong Result!'
+      console.assert(x+y == z, {x, y, message})
+    });
+
+    errorBtns[5].addEventListener('click', () => {
+      console.clear('Clear!');
+    });
+
+    errorBtns[6].addEventListener('click', () => {
+      console.dir(document);
+    });
+ 
+    errorBtns[7].addEventListener('click', () => {
+      console.dirxml(document);
+    });
+ 
+    errorBtns[8].addEventListener('click', () => {
+      console.group('Group!');
+    });
+ 
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd('End Group!');
+    });
+
+    errorBtns[10].addEventListener('click', () => {
+      console.table(['This','is', 'a', 'table'])
+    });
+
+    errorBtns[11].addEventListener('click', () => {
+      console.log('Timer Start!');
+      console.time();
+    });
+
+    errorBtns[12].addEventListener('click', () => {
+      console.log('Timer End!');
+      console.timeEnd();
+    });
+
+    errorBtns[13].addEventListener('click', () => {
+      const first = () => { second(); };
+      const second = () => { third(); };
+      const third = () => { fourth(); };
+      const fourth = () => { console.trace(); };
+      first();
+    });
+
+    errorBtns[14].addEventListener('click', () => {
+      throw 'Global Error';
+    })
+
+
   </script>
 </body>
 
